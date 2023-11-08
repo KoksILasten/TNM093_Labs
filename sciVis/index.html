@@ -280,7 +280,11 @@ const volumeRenderingFragmentSource = `#version 300 es
           //   @TODO: Implement the front-to-back compositing here
           //
 
-
+          // result is vec 4 with the accumulative values
+          // color is current value
+          // (1-result.a) from slide 124
+          result.rgb = (1-result.a) * color.a * color.rgb + result.rgb;
+          result.a = (1-result.a) * color.a + result.a;
 
 
         }
@@ -289,7 +293,12 @@ const volumeRenderingFragmentSource = `#version 300 es
           //   @TODO: Implement the first hitpoint compositing here
           //
 
-
+          //slide 122
+          // change 0.1 ? donno which threshold
+          if(color.a > 0.1){
+            result = color;
+            break;
+          }
 
 
 
@@ -299,7 +308,11 @@ const volumeRenderingFragmentSource = `#version 300 es
           //   @TODO: Implement the maximum-intensity projection here
           //
 
-
+          // slide 123
+          // change result if current a is larger
+          if(result.a < color.a){
+            result = color;
+          }
 
 
         }
