@@ -530,8 +530,6 @@ function updateTransferFunction(gl, transferFunction) {
 
 
 
-
-
   // Upload the new data to the texture
   console.log(117, "Updating the transfer function texture");
   gl.bindTexture(gl.TEXTURE_2D, transferFunction);
@@ -1033,6 +1031,12 @@ function postError(msg) {
 <body onload="main();">
   <p id="error"></p>
   <canvas id="glCanvas" width="640" height="480"></canvas>
+
+  <p>
+    Transfer Function parameters
+    <div><input type="range" name="jeffer" min="0" max="100" value="50" class="slider" id="" oninput="triggerRendering();" ></div>
+  </p>
+
   <p>
     Rendering parameters
     <div>Step size: <input type="range" min="10" max="10000" value="1000" class="slider" id="stepSize" oninput="triggerRendering();"> </div>
