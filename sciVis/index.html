@@ -531,21 +531,70 @@ function updateTransferFunction(gl, transferFunction) {
   //         function editor result
 
   var nodeData = getNodeData();
-
-  for (let i = 0; i < circleArrayNode.length; i+=3) {
-    var opacity = circleArrayNode[i];
-    var start = circleArrayNode[i+1];
-    var end = circleArrayNode[i+2];
-    var color = hexToRgb(circleArrayNode[i].color);
-    for (let j = start; j < end; j+=4) {
-      console.log(color.r);
-      data[i] = color.r;
-      data[i+1] = color.g;
-      data[i+2] = color.b;
-      data[i+3] = opacity;
+  //console.log(119, nodeData);
+  //console.log(120, nodeData);
+  /*
+  for (let i = 0; i < nodeData.length; i++) {
+    //var opacity = circleArrayNode[i];
+    //var start = circleArrayNode[i+1];
+    //var end = circleArrayNode[i+2];
+    //var color = hexToRgb(circleArrayNode[i].color);
+    var opacity = nodeData[i].opacity;
+    var start = nodeData[i].start;
+    var end = nodeData[i].end;
+    var color = nodeData[i].color;
+    //console.log(121, start);
+    //console.log(122, color[1]);
+    console.log(123, opacity);
+    for (var j = start; j < end; j+=4) {
+      console.log(124, opacity);
+      data[j] += color[0];
+      data[j+1] += color[1];
+      data[j+2] += color[2];
+      data[j+3] = opacity;
+      //console.log(125, data[31]);
+      //console.log(125, data[31]);
+      //console.log(125, data[31]);
     }
   }
+  */
+  let averageData = Array.from(Array(256*4)).fill(0);
+  //console.log(126, averageData);
+  //console.log(127, nodeData);
+  for (let i = 0; i < nodeData.length; i++) {
+    let opacity = nodeData[i].opacity;
+    let start = nodeData[i].start;
+    let end = nodeData[i].end;
+    let color = nodeData[i].color;
+    //console.log(128, opacity);
+    console.log(128, opacity);
+    for (let j = start*4; j < end*4; j+=4) {
+      averageData[j] += color[0] * opacity;
+      averageData[j+1] += color[1] * opacity;
+      averageData[j+2] += color[2] * opacity;
+      (averageData[j+3] + opacity) >= 255 ? averageData[j+3] = 255 : averageData[j+3] += opacity;
+    
+      console.log(129, averageData[j+3])
+    }
+  }
+  console.log(130, averageData);
+  for (let i = 0; i < averageData.length; i+=4) {
+    console.log(130, averageData[i+3]);
+    averageData[i+3] != 0 ? averageData[i] = averageData[i] / averageData[i+3] : averageData[i] = 0;
+    averageData[i+3] != 0 ? averageData[i+1] /= averageData[i+3] : averageData[i+1] = 0;
+    averageData[i+3] != 0 ? averageData[i+2] /= averageData[i+3] : averageData[i+2] = 0;
+    console.log(131, averageData[i]);
+  }
+  //console.log(130, averageData);
+  for (let i = 0; i < averageData.length; i+=4) {
+    data[i] = Math.min(averageData[i]/nodeData.length, 255);
+    data[i+1] = Math.min(averageData[i+1]/nodeData.length, 255);
+    data[i+2] = Math.min(averageData[i+2]/nodeData.length, 255);
+    data[i+3] = averageData[i+3];
+  }
 
+
+  console.log(126, data);
 
   // Upload the new data to the texture
   console.log(117, "Updating the transfer function texture");
@@ -1066,10 +1115,15 @@ function postError(msg) {
   }
 </style>
 
+
+
 <body onload="main();">
   <p id="error"></p>
   <canvas id="glCanvas" width="640" height="480" ></canvas>
-  <canvas id="transferCanvas" width="640" height="480"></canvas>
+  <canvas id="transferCanvas" width="640" height="480" ></canvas>
+
+  
+
   <div>
     <p>
       Transfer Function parameters  
@@ -1151,6 +1205,10 @@ function postError(msg) {
     } 
     //console.log(message);
   }, false);
+
+  window.addEventListener('mouseup', function(e){
+    triggerTransferFunctionUpdate();
+  }, false);
   
 
   function Cricle(x, y, radius, color, moveableHor, type){
@@ -1188,7 +1246,7 @@ function postError(msg) {
   var interactDist = 30;
   function moveCircle(){
     if(mouse.down){
-     //select a node
+      //select a node
       if(mouse.nodeSelected == -1){
         for (let i = 0; i < circleArrayNode.length; i++) {
           if(Math.abs(mouse.x - circleArrayNode[i].x) < interactDist && Math.abs(mouse.y - circleArrayNode[i].y) < interactDist){
@@ -1202,8 +1260,7 @@ function postError(msg) {
         //console.log(circleArrayNode[mouse.nodeSelected].type);
         if(circleArrayNode[mouse.nodeSelected].type == 0){
           
-          if(mouse.y > 35 && mouse.y < 425) {
-            console.log(mouse.nodeSelected);
+          if(mouse.y > 36 && mouse.y < 425) {
             circleArrayNode[mouse.nodeSelected].y = mouse.y;
             circleArrayNode[mouse.nodeSelected].x = (circleArrayNode[mouse.nodeSelected+1].x + circleArrayNode[mouse.nodeSelected+2].x)/2;
           }
@@ -1282,6 +1339,7 @@ function postError(msg) {
       let div = document.getElementById("colorDiv");
       div.removeChild(div.lastChild);
     }
+    
   }
   
   function createPairNodes(start){
@@ -1298,15 +1356,17 @@ function postError(msg) {
   }
 
   function getNodeData(){
-    let data = [];
-    let nodePair = {opacity: 0, start: 0, end: 0};
+    var data = [];
+    //var nodePair = {opacity: 0, start: 0, end: 0, color: [0, 0, 0]};
     for (let i = 0; i < circleArrayNode.length; i+=3) {
-      nodePair.opacity = 1 - (circleArrayNode[i].y - 35) / (425-35);
-      nodePair.start = 256 * (circleArrayNode[i+1].x-50) /(600-50);
-      nodePair.end = 256 * (circleArrayNode[i+2].x-50) /(600-50);
-      data.push(nodePair);
+      //console.log(399,i);
+      let opacity = Math.round(255 * (1 - (circleArrayNode[i].y - 35) / (425-35)));
+      let start = Math.round(255 * (circleArrayNode[i+1].x-50) /(600-50));
+      let end = Math.round(255 * (circleArrayNode[i+2].x-50) /(600-50));
+      let color = hexToRgb(circleArrayNode[i].color);
+      data.push({opacity: opacity, start: start, end: end, color: color});
     }
-    console.log(data);
+    //console.log(data);
     return data;
   }
 
@@ -1358,6 +1418,7 @@ function postError(msg) {
       circleArrayNode[i].update();
     }
     moveCircle();
+   
     //nodeData();
   }
   animate();
