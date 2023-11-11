@@ -500,7 +500,7 @@ function updateTransferFunction(gl, transferFunction) {
   // relatively simple ramp with the first 50 values being set to 0 to reduce the noise in
   // the image.  The remainder of the ramp is just using different angles for the color
   // components
-  /*
+
   const cutoff = 50;
 
   for (let i = 0; i < cutoff * 4; i += 4) {
@@ -521,7 +521,7 @@ function updateTransferFunction(gl, transferFunction) {
      data[i + 2] = 3 * it;
      data[i + 3] = it;
    }
-*/
+
   /// End of the provided transfer function
   ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1235,6 +1235,15 @@ function postError(msg) {
     "#BB3E03",
   ];
 
+  var complimentaryColour = [
+    "#00676d",
+    "#e93021",
+    "#f9f694",
+    "#0a121e",
+    "#0e1308",
+    "#702502",
+  ];
+
   var circleArrayNode = [];
   var currentStartx = 150;
   var colorindex = 0;
@@ -1277,9 +1286,12 @@ function postError(msg) {
   
   function createPairNodes(start){
     let randomColor = colorArray[colorindex];
+    let rancompColour = complimentaryColour[colorindex];
+
     let Circle1 = new Cricle(currentStartx, 35, interactDist, randomColor, true, 0);
-    let Circle1start = new Cricle(currentStartx-40, 425, interactDist, "DimGrey", false, 1);
-    let Circle1end = new Cricle(currentStartx+50, 425, interactDist, "DarkSlateGrey", false, 2);
+    let Circle1start = new Cricle(currentStartx-40, 425, interactDist, rancompColour, false, 1);
+    let Circle1end = new Cricle(currentStartx+50, 425, interactDist, rancompColour, false, 2);
+
     circleArrayNode.push(Circle1);
     circleArrayNode.push(Circle1start);
     circleArrayNode.push(Circle1end);
