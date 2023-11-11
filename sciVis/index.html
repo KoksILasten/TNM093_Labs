@@ -573,7 +573,6 @@ function updateTransferFunction(gl, transferFunction) {
       averageData[j+1] += color[1] * opacity;
       averageData[j+2] += color[2] * opacity;
       (averageData[j+3] + opacity) >= 255 ? averageData[j+3] = 255 : averageData[j+3] += opacity;
-    
       //console.log(129, averageData[j+3])
     }
   }
