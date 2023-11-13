@@ -559,6 +559,7 @@ function updateTransferFunction(gl, transferFunction) {
   }
   */
   let averageData = Array.from(Array(256*4)).fill(0);
+  let numNodesAt = Array.from(Array(256)).fill(0);
   //console.log(126, averageData);
   //console.log(127, nodeData);
   for (let i = 0; i < nodeData.length; i++) {
@@ -573,6 +574,7 @@ function updateTransferFunction(gl, transferFunction) {
       averageData[j+1] += color[1] * opacity;
       averageData[j+2] += color[2] * opacity;
       (averageData[j+3] + opacity) >= 255 ? averageData[j+3] = 255 : averageData[j+3] += opacity;
+      numNodesAt[j/4] += 1;
       //console.log(129, averageData[j+3])
     }
   }
@@ -586,14 +588,16 @@ function updateTransferFunction(gl, transferFunction) {
   }
   //console.log(130, averageData);
   for (let i = 0; i < averageData.length; i+=4) {
-    data[i] = Math.min(averageData[i]/nodeData.length, 255);
-    data[i+1] = Math.min(averageData[i+1]/nodeData.length, 255);
-    data[i+2] = Math.min(averageData[i+2]/nodeData.length, 255);
+    data[i] = Math.min(averageData[i]/numNodesAt[i/4], 255);
+    data[i+1] = Math.min(averageData[i+1]/numNodesAt[i/4], 255);
+    data[i+2] = Math.min(averageData[i+2]/numNodesAt[i/4], 255);
     data[i+3] = averageData[i+3];
   }
 
 
   //console.log(126, data);
+
+  //
 
   // Upload the new data to the texture
   //console.log(117, "Updating the transfer function texture");
@@ -909,7 +913,6 @@ async function main() {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-
   //
   //   Load the volume data
   //
@@ -954,7 +957,11 @@ async function main() {
       convertedData[i] = typedData[i] / 4096.0 * 256.0
     }
 
+    // OUR OWN CODE
 
+    loadRawData(convertedData);
+
+    // END OF OUR CODE
     // The volume size also comes from the available meta data for the pig.raw
     // if you want to have a look at the metadata, the pig.dat contains that
     const volumeSize = [ 512, 512, 134 ];
@@ -1198,6 +1205,7 @@ function postError(msg) {
     mouse.x = mousePos.x;
     mouse.y = mousePos.y;
     mouse.down = e.buttons == 1;
+    //console.log(mouse);
     //console.log(e.buttons == 1); 
     if(e.buttons == 0){
       mouse.nodeSelected = -1;
@@ -1378,11 +1386,71 @@ function postError(msg) {
 
   createPairNodes(currentStartx);
 
+  var histData = Array.from(Array(256)).fill(0);
+  function loadRawData(loadRawData){
+    console.log(loadRawData);
+    
+    for (let i = 0; i < loadRawData.length; i++) {
+      histData[loadRawData[i]]++;
+    }
+    // normalize data 0-100
+    for (let i = 0; i < histData.length; i++) {
+      histData[i] = Math.log(histData[i] + 1);
+    }
+
+    let histMax = Math.max(...histData);
+    console.log(histMax);
+    console.log(histData);
+    for (let i = 0; i < histData.length; i++) {
+      histData[i] = histData[i] / histMax;
+      //histData[i] = Math.round(histData[i] * 1000) / 1000;
+    }
+
+    console.log(Math.min(...histData));
+    console.log(histData);
+
+    
+  }
+
+  function drawHist(){
+    let yDiff = (425 - 35) / 2;
+    let scaledHistData = Array.from(Array(256)).fill(0);
+    for (let i = 0; i < histData.length; i++) {
+      scaledHistData[i] = (1 - histData[i]) * yDiff + yDiff + 35;
+    }
+    //console.log(Math.min(...scaledHistData));
+
+    let xStep = (600 - 50) / 256;
+    
+    //50, 35
+    //50, 425
+    //console.log(scaledHistData);
+    
+    c.fillStyle = "black"
+    c.beginPath();
+    c.moveTo(50, scaledHistData[0]);
+    for (var i = 1; i < scaledHistData.length-2; i++) {
+
+      c.lineTo(50 + i * xStep, scaledHistData[i]);
+      //console.log(50 + i * xStep);
+      //var pointx = 50 + i * xStep;
+      //var xc = (pointx + pointx+xStep) / 2;
+      //var yc = (scaledHistData[i] + scaledHistData[i + 1]) / 2;
+      //c.quadraticCurveTo(pointx, scaledHistData, xc, yc);
+    }
+    //c.quadraticCurveTo(pointx+xStep, scaledHistData[i], 600,scaledHistData[i+1]);
+
+    c.lineWidth = 3;
+    c.strokeStyle = "red";
+    c.stroke();
+    c.strokeStyle = "black";
+  }
+
   function animate() {
     requestAnimationFrame(animate);
+    c.clearRect(0, 0, innerWidth, innerHeight);
 
     c.fillStyle = "black"
-    c.clearRect(0, 0, innerWidth, innerHeight);
     c.beginPath();
     c.moveTo(50, 35);
     c.lineTo(50, 425);
@@ -1403,6 +1471,8 @@ function postError(msg) {
     c.restore();
     c.fillText("Value", 575, 450);
 
+    drawHist();
+
     for (let i = 0; i < circleArrayNode.length; i+=3) {
       c.beginPath();
       c.moveTo(circleArrayNode[i+1].x, circleArrayNode[i+1].y);
@@ -1411,6 +1481,8 @@ function postError(msg) {
       c.lineWidth = 3;
       c.stroke();
     }
+
+
     
     c.lineWidth = 1;
     for (var i = 0; i < circleArrayNode.length; i++){
