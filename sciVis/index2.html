@@ -795,6 +795,8 @@ function renderVolume(gl, program, volumeTexture, entryTexture, exitTexture,
 async function main() {
   // Get the canvas object from the main document
   let canvas = document.querySelector("#glCanvas");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
   // Get a WebGL 2.0 context from the canvas
   let gl = canvas.getContext("webgl2");
@@ -1101,8 +1103,16 @@ function postError(msg) {
 
 
 <style>
+  body, #glCanvas {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
   #transferCanvas {
-    border: 1px solid black;
+    border: 0px solid gray;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
   #divRow{
     display: flex;
@@ -1125,7 +1135,7 @@ function postError(msg) {
 
 <body onload="main();">
   <p id="error"></p>
-  <canvas id="glCanvas" width="640" height="480" ></canvas>
+  <canvas id="glCanvas" width="window.width" height="window.height" ></canvas>
   <canvas id="transferCanvas" width="640" height="480" ></canvas>
 
   
