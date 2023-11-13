@@ -1167,36 +1167,35 @@ function postError(msg) {
     </div>
     
   </div>
-  
-
-  <p>
-    Rendering parameters
-    <div>Step size: <input type="range" min="10" max="10000" value="1000" class="slider" id="stepSize" oninput="triggerRendering();"> </div>
-    <div>
-      <div>Compositing method:</div>
-      <div><input type="radio" name="compositing" value="ftb" onchange="triggerRendering();" checked>Front-to-back</div>
-      <div><input type="radio" name="compositing" value="fhp" onchange="triggerRendering();">First hit-point</div>
-      <div><input type="radio" name="compositing" value="mip" onchange="triggerRendering();">Maximum-intensity projection</div>
-    </div>
-  </p>
-  <p>
-    Camera
-      <div> r: <input type="range" min="0" max="100" value="50" class="slider" id="camera-r" oninput="triggerRendering();"></div>
-      <div> phi: <input type="range" min="0" max="360" value="35" class="slider" id="camera-phi" oninput="triggerRendering();"></div>
-      <div> theta: <input type="range" min="1" max="180" value="65" class="slider" id="camera-theta" oninput="triggerRendering();"></div>
-  </p>
-  <p>
-    Debugging
-      <div>Rendering output:</div>
-      <div><input type="radio" name="debug-output" value="volume" onchange="triggerRendering();" checked>Volume Rendering</div>
-      <div><input type="radio" name="debug-output" value="entry" onchange="triggerRendering();">Entry Points</div>
-      <div><input type="radio" name="debug-output" value="exit" onchange="triggerRendering();">Exit Points</div>
-      <div><input type="radio" name="debug-output" value="direction" onchange="triggerRendering();">Ray direction</div>
-      <div><input type="radio" name="debug-output" value="transfer" onchange="triggerRendering();">Transfer Function</div>
-      <div><input type="radio" name="debug-output" value="slice" onchange="triggerRendering();">Volume Slice</div>
-      <div><input type="radio" name="debug-output" value="slice-transfer" onchange="triggerRendering();">Volume Slice with transfer function</div>
-  </p>
-
+  <div id="settingsDiv">
+    <p>
+      Rendering parameters
+      <div>Step size: <input type="range" min="10" max="10000" value="1000" class="slider" id="stepSize" oninput="triggerRendering();"> </div>
+      <div>
+        <div>Compositing method:</div>
+        <div><input type="radio" name="compositing" value="ftb" onchange="triggerRendering();" checked>Front-to-back</div>
+        <div><input type="radio" name="compositing" value="fhp" onchange="triggerRendering();">First hit-point</div>
+        <div><input type="radio" name="compositing" value="mip" onchange="triggerRendering();">Maximum-intensity projection</div>
+      </div>
+    </p>
+    <p>
+      Camera
+        <div> r: <input type="range" min="0" max="100" value="50" class="slider" id="camera-r" oninput="triggerRendering();"></div>
+        <div> phi: <input type="range" min="0" max="360" value="35" class="slider" id="camera-phi" oninput="triggerRendering();"></div>
+        <div> theta: <input type="range" min="1" max="180" value="65" class="slider" id="camera-theta" oninput="triggerRendering();"></div>
+    </p>
+    <p>
+      Debugging
+        <div>Rendering output:</div>
+        <div><input type="radio" name="debug-output" value="volume" onchange="triggerRendering();" checked>Volume Rendering</div>
+        <div><input type="radio" name="debug-output" value="entry" onchange="triggerRendering();">Entry Points</div>
+        <div><input type="radio" name="debug-output" value="exit" onchange="triggerRendering();">Exit Points</div>
+        <div><input type="radio" name="debug-output" value="direction" onchange="triggerRendering();">Ray direction</div>
+        <div><input type="radio" name="debug-output" value="transfer" onchange="triggerRendering();">Transfer Function</div>
+        <div><input type="radio" name="debug-output" value="slice" onchange="triggerRendering();">Volume Slice</div>
+        <div><input type="radio" name="debug-output" value="slice-transfer" onchange="triggerRendering();">Volume Slice with transfer function</div>
+    </p>
+  </div>
   <!--
     Add some UI elements here to modify the transfer function.  As mentioned above, you need to call the function 'triggerTransferFunctionUpdate' to trigger and update of the GPU representation of the transfer function texture.  If you don't call that function, no change will be visible.
   -->
