@@ -1247,6 +1247,100 @@ function postError(msg) {
   window.addEventListener('mouseup', function(e){
     triggerTransferFunctionUpdate();
   }, false);
+
+var cameraZoom = document.getElementById('camera-r');
+var cameraPan = document.getElementById('camera-phi');
+var cameraRot = document.getElementById('camera-theta');
+
+function leftHandler() { //rotate left
+    // console.log(cameraPan);
+    // console.log(cameraZoom);
+    // console.log(cameraRot);
+  if (cameraPan.value == 360){
+    cameraPan.value = 0;
+    console.log("death to america")
+  }
+  cameraPan.value++;
+  cameraPan.value++;
+}
+
+function rightHandler() { //rotate right
+  if (cameraPan.value == 0){
+    cameraPan.value = 360;
+  }
+  cameraPan.value--;
+  cameraPan.value--;
+}
+
+function camPanRotFix(){
+  if((Number(cameraPan.value) + 180) > 360){ //flips 180 to retain same position faking 360 degrees 
+        cameraPan.value = (Number(cameraPan.value) - 180);
+      }
+      else{
+        console.log("hello");
+        cameraPan.value = (Number(cameraPan.value) + 180);
+      }
+}
+
+let beenFlipped = false;
+
+function upHandler() {
+
+  console.log(cameraRot.value);
+
+    if(cameraRot.value == 1){ 
+      beenFlipped = false;
+       camPanRotFix();
+      }
+    if(cameraRot.value == 180 || cameraRot.value == 179){
+      //cameraRot.value = 0;
+
+      camPanRotFix();
+      beenFlipped = true;
+
+    }
+   //console.log(cameraRot.value);
+    if(!beenFlipped){
+    cameraRot.value++;
+    cameraRot.value++;
+  }else{
+    cameraRot.value--;
+    cameraRot.value--;
+  }
+}
+
+function downHandler() {
+  if(cameraRot.value == 179 || cameraRot.value == 180){
+    beenFlipped = false;
+    camPanRotFix();
+  }
+  if(cameraRot.value == 1 || cameraRot.value == 2){
+      camPanRotFix();
+      beenFlipped = true;
+      
+    }
+    if(!beenFlipped){
+    cameraRot.value--;
+    cameraRot.value--;
+  }else{
+    cameraRot.value++;
+    cameraRot.value++;
+  }
+}
+
+
+
+  window.addEventListener('keydown', function(e){
+    const callback = {
+    "ArrowLeft"  : leftHandler,
+    "ArrowRight" : rightHandler,
+    "ArrowUp"    : upHandler,
+    "ArrowDown"  : downHandler,
+}[event.code]
+callback?.()
+
+  triggerTransferFunctionUpdate();
+  }, false);
   
 
   function Cricle(x, y, radius, color, moveableHor, type){
