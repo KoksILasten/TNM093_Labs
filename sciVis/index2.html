@@ -1505,7 +1505,7 @@ let beenFlipped = false;
 
   function changeColor(e){
     let color = e.value;
-    let index = (e.name[e.name.length-1]-1)*3;
+    let index = (e.name[e.name.length-1]-1)*4;
     
     circleArrayNode[index].color = color;
     circleArrayNode[index+1].color = color;
@@ -1515,7 +1515,7 @@ let beenFlipped = false;
   }
   
   function addNode(){
-    if(circleArrayNode.length < 24){
+    if(circleArrayNode.length < 4*6){
       colorindex++;
       currentStartx += 60;
 
@@ -1588,7 +1588,7 @@ let beenFlipped = false;
 
   var histData = Array.from(Array(256)).fill(0);
   function loadRawData(loadRawData){
-    console.log(loadRawData);
+    //console.log(loadRawData);
     
     for (let i = 0; i < loadRawData.length; i++) {
       histData[loadRawData[i]]++;
@@ -1600,15 +1600,13 @@ let beenFlipped = false;
 
     let histMax = Math.max(...histData);
     //console.log(histMax);
-    console.log(histData);
+    //console.log(histData);
     for (let i = 0; i < histData.length; i++) {
       histData[i] = histData[i] / histMax;
     }
 
     //console.log(Math.min(...histData));
     //console.log(histData);
-
-    
   }
 
   function drawHist(){
