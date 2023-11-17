@@ -1429,19 +1429,23 @@ let beenFlipped = false;
         if(circleArrayNode[mouse.nodeSelected].type == 0){
           if(mouse.y > 36 && mouse.y < 425 && mouse.x < circleArrayNode[mouse.nodeSelected+1].x && mouse.x >circleArrayNode[mouse.nodeSelected+2].x) {
             circleArrayNode[mouse.nodeSelected].y = mouse.y;
-            //circleArrayNode[mouse.nodeSelected].x = (circleArrayNode[mouse.nodeSelected+1].x + circleArrayNode[mouse.nodeSelected+2].x)/2;
             circleArrayNode[mouse.nodeSelected].x = mouse.x; 
           }
           if (mouse.y > 36 && mouse.y < 425 && mouse.x < circleArrayNode[mouse.nodeSelected+2].x) {
               circleArrayNode[mouse.nodeSelected].x = circleArrayNode[mouse.nodeSelected+2].x;
               circleArrayNode[mouse.nodeSelected].y = mouse.y;
           }
+          if(mouse.y < 36){
+            circleArrayNode[mouse.nodeSelected].y = 36;
+          }
+          if(mouse.y > 425){
+            circleArrayNode[mouse.nodeSelected].y = 425;
+          }
         }
         // top right
         if (circleArrayNode[mouse.nodeSelected].type == 1) {
           if(mouse.y > 36 && mouse.y < 425 && mouse.x > circleArrayNode[mouse.nodeSelected-1].x && mouse.x < circleArrayNode[mouse.nodeSelected+2].x) {
             circleArrayNode[mouse.nodeSelected].y = mouse.y;
-            //circleArrayNode[mouse.nodeSelected].x = (circleArrayNode[mouse.nodeSelected+1].x + circleArrayNode[mouse.nodeSelected+2].x)/2;
             circleArrayNode[mouse.nodeSelected].x = mouse.x;
           }
           if (mouse.y > 36 && mouse.y < 425 && mouse.x > circleArrayNode[mouse.nodeSelected+2].x) {
@@ -1453,7 +1457,6 @@ let beenFlipped = false;
         if (circleArrayNode[mouse.nodeSelected].type == 2 ) {
           if (mouse.x > 50 && mouse.x < 600 && mouse.x < circleArrayNode[mouse.nodeSelected+1].x) {
             circleArrayNode[mouse.nodeSelected].x = mouse.x;
-            //circleArrayNode[mouse.nodeSelected-1].x = (circleArrayNode[mouse.nodeSelected].x + circleArrayNode[mouse.nodeSelected+1].x)/2;
             if(mouse.x > circleArrayNode[mouse.nodeSelected-2].x){
               circleArrayNode[mouse.nodeSelected-2].x = circleArrayNode[mouse.nodeSelected].x;
             }
@@ -1463,7 +1466,6 @@ let beenFlipped = false;
         if (circleArrayNode[mouse.nodeSelected].type == 3 ) {
           if (mouse.x > 50 && mouse.x < 600 && mouse.x > circleArrayNode[mouse.nodeSelected-1].x) {
             circleArrayNode[mouse.nodeSelected].x = mouse.x;
-            //circleArrayNode[mouse.nodeSelected-2].x = (circleArrayNode[mouse.nodeSelected-1].x + circleArrayNode[mouse.nodeSelected].x)/2;
             if(mouse.x < circleArrayNode[mouse.nodeSelected-2].x){
               circleArrayNode[mouse.nodeSelected-2].x = circleArrayNode[mouse.nodeSelected].x;
             }
@@ -1481,16 +1483,7 @@ let beenFlipped = false;
     "#283618",
     "#BB3E03",
   ];
-  /*
-  var complimentaryColour = [
-    "#00676d",
-    "#e93021",
-    "#f9f694",
-    "#0a121e",
-    "#0e1308",
-    "#702502",
-  ];
-  */
+
   var colorCompChange = -55;
   function getComplimentaryColor(color){
     color = hexToRgb(color);
@@ -1542,7 +1535,6 @@ let beenFlipped = false;
       let div = document.getElementById("colorDiv");
       div.removeChild(div.lastChild);
     }
-    
   }
   
   function createPairNodes(start){
@@ -1604,7 +1596,6 @@ let beenFlipped = false;
     for (let i = 0; i < histData.length; i++) {
       histData[i] = histData[i] / histMax;
     }
-
     //console.log(Math.min(...histData));
     //console.log(histData);
   }
@@ -1627,15 +1618,8 @@ let beenFlipped = false;
     c.beginPath();
     c.moveTo(50, scaledHistData[0]);
     for (var i = 1; i < scaledHistData.length; i++) {
-
       c.lineTo(50 + i * xStep, scaledHistData[i]);
-      //console.log(50 + i * xStep);
-      //var pointx = 50 + i * xStep;
-      //var xc = (pointx + pointx+xStep) / 2;
-      //var yc = (scaledHistData[i] + scaledHistData[i + 1]) / 2;
-      //c.quadraticCurveTo(pointx, scaledHistData, xc, yc);
     }
-    //c.quadraticCurveTo(pointx+xStep, scaledHistData[i], 600,scaledHistData[i+1]);
 
     c.lineWidth = 3;
     c.strokeStyle = lineColor;
@@ -1661,7 +1645,6 @@ let beenFlipped = false;
     c.textAlign = "center";
     c.strokeStyle = textColor;
     c.save();
-    //c.translate(50, 50);
     c.strokeStyle = textColor;
     c.rotate(-Math.PI/2);
     c.fillText("Opacity", -70, 30);
@@ -1687,8 +1670,6 @@ let beenFlipped = false;
       circleArrayNode[i].update();
     }
     moveCircle();
-   
-    //nodeData();
   }
   animate();
 
