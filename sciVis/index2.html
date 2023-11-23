@@ -1455,7 +1455,7 @@ let beenFlipped = false;
         }
         // bottom left
         if (circleArrayNode[mouse.nodeSelected].type == 2 ) {
-          if (mouse.x > 50 && mouse.x < 600 && mouse.x < circleArrayNode[mouse.nodeSelected+1].x) {
+          if (mouse.x > 50 && mouse.x < 600 && mouse.x < circleArrayNode[mouse.nodeSelected+1].x && mouse.x < circleArrayNode[mouse.nodeSelected-1].x) {
             circleArrayNode[mouse.nodeSelected].x = mouse.x;
             if(mouse.x > circleArrayNode[mouse.nodeSelected-2].x){
               circleArrayNode[mouse.nodeSelected-2].x = circleArrayNode[mouse.nodeSelected].x;
@@ -1464,7 +1464,7 @@ let beenFlipped = false;
         }
         // bottom right
         if (circleArrayNode[mouse.nodeSelected].type == 3 ) {
-          if (mouse.x > 50 && mouse.x < 600 && mouse.x > circleArrayNode[mouse.nodeSelected-1].x) {
+          if (mouse.x > 50 && mouse.x < 600 && mouse.x > circleArrayNode[mouse.nodeSelected-1].x && mouse.x > circleArrayNode[mouse.nodeSelected-3].x) {
             circleArrayNode[mouse.nodeSelected].x = mouse.x;
             if(mouse.x < circleArrayNode[mouse.nodeSelected-2].x){
               circleArrayNode[mouse.nodeSelected-2].x = circleArrayNode[mouse.nodeSelected].x;
